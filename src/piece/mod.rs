@@ -1,4 +1,5 @@
-use crate::core::{Color, Position};
+use crate::core::Color;
+use crate::position::Position;
 
 pub enum Kind {
     Rook,
@@ -11,7 +12,7 @@ pub enum Kind {
 
 pub struct Piece {
     kind: Kind,
-    color: Color,
+    pub color: Color,
     position: Position,
 }
 
@@ -35,8 +36,17 @@ impl Piece {
         }
     }
 
-    pub fn at(&self, file: char, rank: u8) -> bool {
-        self.position.file == file && self.position.rank == rank
+    pub fn at(&self, position: &Position) -> bool {
+        self.position == *position
+    }
+
+    pub fn move_to(&mut self, position: Position) {
+        self.position = Position::from(position);
+    }
+
+    // TODO
+    pub fn can_move_to(&self, position: &Position) -> bool {
+        true
     }
 
     pub fn is_black(&self) -> bool {

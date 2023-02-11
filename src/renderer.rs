@@ -1,5 +1,6 @@
 use crate::core;
 use crate::piece::Piece;
+use crate::position::Position;
 use colored::*;
 
 pub struct Renderer {
@@ -22,7 +23,7 @@ impl Renderer {
         }
     }
 
-    pub fn render(&self, pieces: &Vec<&Piece>) -> String {
+    pub fn render(&self, pieces: &Vec<Piece>) -> String {
         let border = String::from("--------------------------");
         let mut result = String::from(&border);
 
@@ -32,8 +33,12 @@ impl Renderer {
             let mut bot = "|".to_string();
 
             for (col_idx, _) in row.iter().enumerate() {
-                let piece = &self.get_piece_from_index(&pieces, row_idx, col_idx);
-                let (t, m, b) = &self.render_cell(*piece, row_idx, col_idx);
+                let pos = Position::new(
+                    core::get_file_from_index(col_idx),
+                    core::get_rank_from_index(row_idx),
+                );
+                let piece = pieces.iter().find(|x| x.at(&pos));
+                let (t, m, b) = &self.render_cell(piece, row_idx, col_idx);
 
                 top = format!("{}{}", top, t);
                 mid = format!("{}{}", mid, m);
@@ -48,11 +53,12 @@ impl Renderer {
 
     fn render_cell(
         &self,
-        piece: Option<&&Piece>,
+        piece: Option<&Piece>,
         row: usize,
         col: usize,
     ) -> (String, String, String) {
-        let spacer = if (row + col) % 2 == 0 { " " } else { "·" };
+        // ░  ·
+        let spacer = if (row + col) % 2 == 0 { "·" } else { " " };
         let buffer = format!("{}{}{}", spacer, spacer, spacer);
 
         (
@@ -74,17 +80,5 @@ impl Renderer {
             },
             String::from(&buffer),
         )
-    }
-
-    fn get_piece_from_index<'a>(
-        &'a self,
-        pieces: &'a Vec<&'a Piece>,
-        row: usize,
-        col: usize,
-    ) -> Option<&&Piece> {
-        let rank = core::get_rank_from_index(row);
-        let file = core::get_file_from_index(col);
-
-        pieces.iter().find(|x| x.at(file, rank))
     }
 }
