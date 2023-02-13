@@ -23,7 +23,7 @@ impl Renderer {
         }
     }
 
-    pub fn render(&self, pieces: &Vec<Piece>) -> String {
+    pub fn render(&self, pieces: &Vec<Box<dyn Piece>>) -> String {
         let border = String::from("--------------------------");
         let mut result = String::from(&border);
 
@@ -53,7 +53,7 @@ impl Renderer {
 
     fn render_cell(
         &self,
-        piece: Option<&Piece>,
+        piece: Option<&Box<dyn Piece>>,
         row: usize,
         col: usize,
     ) -> (String, String, String) {
@@ -68,7 +68,7 @@ impl Renderer {
                     format!(
                         "{}{}{}",
                         spacer,
-                        if piece.is_black() {
+                        if *piece.color() == core::Color::Black {
                             piece.to_string().red()
                         } else {
                             piece.to_string().green()

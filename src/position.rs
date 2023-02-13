@@ -22,7 +22,7 @@ impl Position {
         Self { file, rank }
     }
 
-    pub fn from(pos: Position) -> Self {
+    pub fn from(pos: &Position) -> Self {
         Self {
             file: pos.file,
             rank: pos.rank,

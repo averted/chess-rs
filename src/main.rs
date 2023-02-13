@@ -10,7 +10,8 @@ use std::error::Error;
 use std::fs::File;
 use std::io;
 
-fn main() -> Result<(), Box<dyn Error>> {
+//fn main() -> Result<(), Box<dyn Error>> {
+fn main() {
     let mut board = Board::new();
 
     board.generate_pieces();
@@ -40,6 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     board.move_piece(from, to);
                 }
                 None => {
+                    // todo
                     board.move_piece(Position::new('a', 2), from);
                 }
             }
